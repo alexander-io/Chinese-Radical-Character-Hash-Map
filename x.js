@@ -1,4 +1,10 @@
 let request = require('request')
+
+function getPosition(string, subString, index) {
+   return string.split(subString, index).join(subString).length;
+}
+
+
 request.get('http://www.archchinese.com/traditional_chinese_radicals.html',  function(err, res, body){
   if (err) {
     console.log(err);
@@ -23,46 +29,38 @@ request.get('http://www.archchinese.com/traditional_chinese_radicals.html',  fun
   while (builder.includes('</tr>')){
     let index_of_open_tr = builder.indexOf('<tr>')
     let index_of_close_tr = builder.indexOf('</tr>')
-    console.log('index of open tr :', index_of_open_tr);
-    console.log('index of close tr :', index_of_close_tr);
+    // console.log('index of open tr :', index_of_open_tr);
+    // console.log('index of close tr :', index_of_close_tr);
     let slice = builder.substring(index_of_open_tr, index_of_close_tr+'</tr>'.length)
     console.log('sub :\n\n\t', slice);
-    console.log('\n\n');
+    // console.log('\n\n');
+
+
+    let third_english_end = getPosition(slice, 'english', 3) + 'english">'.length
+
+    let sub_slice = slice.substring(third_english_end, slice.length)
+    let nxt_brkt = sub_slice.indexOf('<')
 
     let entry = {
-      number : slice.substring(slice.indexOf('<center>')+'<center>'.length, slice.indexOf('</center>')),
+      number : slice.substring(
+        slice.indexOf('<center>')+'<center>'.length,
+        slice.indexOf('</center>')
+      ),
       character : slice.substring(
         slice.indexOf('?trad=') + '?trad=65e5">'.length,
         slice.indexOf('?trad=') + '?trad=65e5">'.length+1
+      ),
+      pinyin : sub_slice.substring(
+        0,
+        nxt_brkt
       )
     }
 
-    console.log('num :', entry.number);
+    console.log('\nnum :', entry.number);
     console.log('char :', entry.character);
-
+    console.log('pinyin :', entry.pinyin);
+    console.log('\n\n');
     builder = builder.substring(index_of_close_tr+'</tr>'.length, builder.length)
   }
-
-
-
-
-  // while (builder.includes('</tr>')) {
-  //   let index_of_open_tr = builder.indexOf('<tr>')
-  //   // let index_of_close_tr = builder.indexOf('/')
-  //   let index_of_english = builder.indexOf('english')
-  //   console.log('index of open tr :', index_of_open_tr);
-  //   // console.log('index of close tr :', index_of_close_tr);
-  //   console.log('index of english :', index_of_english);
-  //   console.log('builder length :', builder.length);
-  //   // rad_dict =
-  //   // let slice = builder.substring(index_of_open_tr, index_of_close_tr)
-  //   // console.log('SLICE :\n\t',slice);
-  //   // console.log('\n\n');
-  //
-  //   // builder = builder.substring(index_of_close_tr, builder.length)
-  //   builder = builder.substring(index_of_english, builder.length)
-  //
-  // }
-
 
 })
