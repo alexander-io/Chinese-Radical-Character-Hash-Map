@@ -1,7 +1,7 @@
 let request = require('request')
 // ,
 let readline = require('readline')
-
+let fs = require('fs')
 
 function convertTToNo(pinyin) {
 
@@ -298,17 +298,27 @@ let aggregate_data = function(){
   })
 }
 
+
+
+
+
 aggregate_data().then(function(resolve, reject) {
+
+
+	let json = JSON.stringify(resolve)
+	fs.writeFileSync('radicals.json', json, (err) => {
+		if (err) throw err;
+		console.log('file written');
+	})
 
   const rl = readline.createInterface({
     input : process.stdin,
     output : process.stdout
   })
 
-
   let query_user = function(){
     rl.question('input : ', (answer) => {
-      console.log('for a key : ', answer, '->', resolve[answer]);
+      console.log('key : ', answer, '->', resolve[answer]);
       query_user()
     })
   }
