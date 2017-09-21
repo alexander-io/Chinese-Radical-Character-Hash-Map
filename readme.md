@@ -1,7 +1,7 @@
 # Chinese Radical Character Hash Map
 ## 中文激进地图
 
-## Usage linux/un
+## Usage linux/unix
 
 ```bash
 # ensure that nodejs javascript runtime is installed
